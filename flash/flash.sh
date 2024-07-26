@@ -101,7 +101,11 @@ else
     wget --no-check-certificate -O "$TEMP_DIR/firmware.zip" "$FIRMWARE_URL"
     unzip -o "$TEMP_DIR/firmware.zip" -d "$TEMP_DIR"
     mkdir -p "$FIRMWARE_PATH"
-    cp "$TEMP_DIR/firmware/"*.bin "$FIRMWARE_PATH/"
+    echo "Contents of $TEMP_DIR:"
+    ls -l "$TEMP_DIR"
+    cp "$TEMP_DIR/"*.bin "$FIRMWARE_PATH/"
+    echo "Contents of $FIRMWARE_PATH after copying:"
+    ls -l "$FIRMWARE_PATH"
     echo "Latest release downloaded and extracted."
 fi
 
@@ -150,6 +154,6 @@ fi
 echo "Cleaning up temporary files..."
 rm -rf "$TEMP_DIR/firmware.zip"
 rm -rf "$TEMP_DIR/latest_release.json"
-rm -rf "$TEMP_DIR/firmware"
+# rm -rf "$TEMP_DIR/firmware"  # Commented out to not remove the temporary directory itself
 
 echo "End of firmware update script."
