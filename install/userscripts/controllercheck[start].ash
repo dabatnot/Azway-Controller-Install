@@ -23,10 +23,10 @@
 # SOFTWARE.
 
 ## @file controller_install.sh
-# @brief Script for installing and updating the controller script and its dependencies.
-# @details This script checks for the latest version of the controller script, installs necessary dependencies, and manages the script execution.
+# @brief Script for installing and updating the controller script.
+# @details This script checks for the latest version of the controller script and manages the script execution.
 
-LOG_FILE="/var/log/controller_install.log"
+LOG_FILE="/recalbox/share/addons/azway/controller/logs/main.log"
 
 # Redirect all output to the log file
 exec > "$LOG_FILE" 2>&1
@@ -40,12 +40,10 @@ TEMP_DIR="$INSTALL_DIR/tmp"
 SCRIPT_DIR="/recalbox/share/userscripts"
 SCRIPT_NAME="controller(permanent).py"
 SCRIPT_PATH="$SCRIPT_DIR/$SCRIPT_NAME"
-SITE_PACKAGES_DIR="/usr/lib/python3.11/site-packages"
 
 # Define URLs and filenames
 GITHUB_API_URL="https://api.github.com/repos/dabatnot/Azway-Retro-Controller-Scripts/releases/latest"
 RELEASE_BASE_URL="https://github.com/dabatnot/Azway-Retro-Controller-Scripts/releases/download"
-PYSERIAL_URL="https://files.pythonhosted.org/packages/source/p/pyserial/pyserial-3.5.tar.gz"
 SCRIPT_DOWNLOAD_NAME="controller.py"
 LATEST_VERSION_FILE="$TEMP_DIR/latest_version.txt"
 
@@ -77,12 +75,6 @@ start_script() {
         echo "Starting the script $SCRIPT_NAME"
         nohup python3 "$SCRIPT_PATH" &
     fi
-}
-
-## @brief Function to check if the pyserial library is already installed
-is_pyserial_installed() {
-    python3 -c "import serial" > /dev/null 2>&1
-    return $?
 }
 
 ## @brief Function to wait for network availability
@@ -153,20 +145,6 @@ if [ "$installation_done" = true ]; then
     echo "Installation needed"
     # Stop the Python script if it is running
     stop_running_script
-
-    # Check if pyserial is already installed
-    if is_pyserial_installed; then
-        echo "pyserial is already installed. No reinstallation needed."
-    else
-        # Execute the installation script for pyserial
-        mkdir -p "$TEMP_DIR"
-        cd "$TEMP_DIR"
-        wget --no-check-certificate "$PYSERIAL_URL"
-        tar -xzf pyserial-3.5.tar.gz
-        cp -r pyserial-3.5/serial "$SITE_PACKAGES_DIR"
-        cd ..
-        rm -rf "$TEMP_DIR"
-    fi
 
     # Download the latest release from GitHub
     wget --no-check-certificate -O "$TEMP_DIR/release.tar.gz" "$RELEASE_BASE_URL/$INSTALL_VERSION/release.tar.gz"
