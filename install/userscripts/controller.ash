@@ -61,6 +61,11 @@ run_script() {
     fi
 }
 
+# Function to compare version strings
+version_greater() {
+    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"
+}
+
 # Repositories to check
 repo1="dabatnot/Azway-Retro-Controller-Install"
 repo2="dabatnot/Azway-Retro-Controller"
@@ -89,8 +94,19 @@ rm "$destination_dir/$file_name"
 install_script="/recalbox/share/addons/azway/controller/install/dependencies/install_dependances.sh"
 run_script $install_script
 
-# Run the flash.sh script
-flash_script="/recalbox/share/addons/azway/controller/install/flash/flash.sh"
-run_script $flash_script
+# Check the installed firmware version
+installed_version_file="/recalbox/share/addons/azway/controller/firmware/instelled_version.txt"
+if [ -f "$installed_version_file" ]; then
+    installed_version=$(cat "$installed_version_file")
+else
+    installed_version="v0.0.0"
+fi
 
-echo "Downloaded, unzipped, ran install_dependances.sh, and ran flash.sh for $repo1"
+# Compare versions and run the flash script if the latest release is greater
+if version_greater "$latest_release2" "$installed_version"; then
+    flash_script="/recalbox/share/addons/azway/controller/install/flash/flash.sh"
+    run_script $flash_script
+    echo "$latest_release2" > "$installed_version_file"
+fi
+
+echo "Downloaded, unzipped, ran install_dependances.sh, and ran flash.sh if needed for $repo1"
