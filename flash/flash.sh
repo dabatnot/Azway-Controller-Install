@@ -33,6 +33,7 @@ echo "Starting firmware update script."
 BASE_PATH="/recalbox/share/addons/azway/controller/firmware"
 TOOLS_PATH="$BASE_PATH/tools"
 BIN_PATH="$BASE_PATH/bin"
+TEMP_DIR="/recalbox/share/addons/azway/controller/tmp/flash"
 
 # Define specific paths
 ESPTOOL_PATH="$TOOLS_PATH/esptools"
@@ -40,9 +41,8 @@ FIRMWARE_PATH="$BIN_PATH"
 INSTALLED_VERSION_FILE="$BASE_PATH/installed_version.txt"
 
 # Define URLs
+FIRMWARE_URL="https://github.com/dabatnot/Azway-Retro-Controller/releases/latest/download/firmware.zip"
 GITHUB_API_URL="https://api.github.com/repos/dabatnot/Azway-Retro-Controller/releases/latest"
-ARCHIVE_BASE_URL="https://github.com/dabatnot/Azway-Retro-Controller/archive/refs/tags"
-TEMP_DIR="/tmp"
 
 ## @brief Function to fetch the latest version number from GitHub API using wget and sed
 # @return Latest version number or exits on error
@@ -98,10 +98,10 @@ if version_greater_or_equal "$LATEST_VERSION" "$INSTALLED_VERSION"; then
     echo "The installed version is up to date or newer. No action required."
 else
     echo "A newer version is available. Downloading the latest release..."
-    wget --no-check-certificate -O "$TEMP_DIR/release.tar.gz" "$ARCHIVE_BASE_URL/$LATEST_VERSION.tar.gz"
-    tar -xzf "$TEMP_DIR/release.tar.gz" -C "$TEMP_DIR"
+    wget --no-check-certificate -O "$TEMP_DIR/firmware.zip" "$FIRMWARE_URL"
+    unzip -o "$TEMP_DIR/firmware.zip" -d "$TEMP_DIR"
     mkdir -p "$FIRMWARE_PATH"
-    cp "$TEMP_DIR/Azway-Retro-Controller-$LATEST_VERSION/firmware/*.bin" "$FIRMWARE_PATH/"
+    cp "$TEMP_DIR/firmware/"*.bin "$FIRMWARE_PATH/"
     echo "Latest release downloaded and extracted."
 fi
 
@@ -146,10 +146,10 @@ else
     echo "Error: ESP32 not detected."
 fi
 
-# Clean up temporary files
+# Clean up temporary files except the temporary directory
 echo "Cleaning up temporary files..."
-rm -rf /tmp/release.tar.gz
+rm -rf "$TEMP_DIR/firmware.zip"
 rm -rf "$TEMP_DIR/latest_release.json"
-rm -rf "$TEMP_DIR/Azway-Retro-Controller-$LATEST_VERSION"
+rm -rf "$TEMP_DIR/firmware"
 
 echo "End of firmware update script."

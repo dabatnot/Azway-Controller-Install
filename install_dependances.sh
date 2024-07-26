@@ -25,11 +25,11 @@
 # Define file and directory paths
 LIBS_ZIP="./libs/libs.zip"
 ESPTOOL_ZIP="./libs/esptool.zip"
-DEST_DIR="/home/david/Développements/Recalbox/recalenv/recalbox/share/addons/azway/controller"
+DEST_DIR="/recalbox/share/addons/azway/controller"
 LIBS_DIR="./libs"
-TEMP_DIR="/home/david/Développements/Recalbox/recalenv/recalbox/share/addons/azway/controller/tmp/esptool_temp"
-ESPTOOL_DEST_DIR="/home/david/Développements/Recalbox/recalenv/recalbox/share/addons/azway/controller/firmware/tools/esptool"
-LOG_DIR="/home/david/Développements/Recalbox/recalenv/recalbox/share/addons/azway/controller/logs"
+TEMP_DIR="/recalbox/share/addons/azway/controller/tmp/esptool_temp"
+ESPTOOL_DEST_DIR="/recalbox/share/addons/azway/controller/firmware/tools/esptool"
+LOG_DIR="/recalbox/share/addons/azway/controller/logs"
 LOG_FILE="$LOG_DIR/dependencies.log"
 
 # Create log directory if it doesn't exist
