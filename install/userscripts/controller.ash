@@ -29,19 +29,26 @@ mkdir -p "$(dirname "$LOG_FILE")"
 > "$LOG_FILE"  # Purge the log file at the beginning of each run
 exec > >(tee -a "$LOG_FILE") 2>&1
 
-# Function to get the latest release tag from a GitHub repository
+##
+# @brief Function to get the latest release tag from a GitHub repository
+# @param repo The repository name in the format "owner/repo"
+# @return The latest release tag
+##
 get_latest_release() {
     repo=$1
-    api_response=$(curl -s "https://api.github.com/repos/$repo/releases/latest")
-    echo "API response for $repo: $api_response"  # Debugging line
-    latest_release=$(echo "$api_response" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+    latest_release=$(curl -s "https://api.github.com/repos/$repo/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
     if [ -z "$latest_release" ]; then
         echo "Failed to get the latest release for $repo"  # Debugging line
     fi
     echo "$latest_release"
 }
 
-# Function to download the latest release zip file to a specific directory
+##
+# @brief Function to download the latest release zip file to a specific directory
+# @param repo The repository name in the format "owner/repo"
+# @param file_name The name of the file to download
+# @param destination_dir The directory where the file will be downloaded
+##
 download_latest_release() {
     repo=$1
     file_name=$2
@@ -55,13 +62,20 @@ download_latest_release() {
     curl -L -o "$destination_dir/$file_name" "$url"
 }
 
-# Function to clean the destination directory
+##
+# @brief Function to clean the destination directory
+# @param dir The directory to be cleaned
+##
 clean_directory() {
     dir=$1
     rm -rf "$dir"/*
 }
 
-# Function to unzip the downloaded file directly into the specified directory
+##
+# @brief Function to unzip the downloaded file directly into the specified directory
+# @param file_path The path to the zip file
+# @param destination_dir The directory where the file will be unzipped
+##
 unzip_file() {
     file_path=$1
     destination_dir=$2
@@ -77,7 +91,10 @@ unzip_file() {
     fi
 }
 
-# Function to run a script
+##
+# @brief Function to run a script
+# @param script_path The path to the script to be executed
+##
 run_script() {
     script_path=$1
 
@@ -95,7 +112,11 @@ run_script() {
     fi
 }
 
-# Function to compare version strings
+##
+# @brief Function to compare version strings
+# @param $@ The versions to be compared
+# @return True if the first version is greater than the second, False otherwise
+##
 version_greater() {
     test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"
 }
