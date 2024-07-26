@@ -60,13 +60,13 @@ FIRMWARE_PATH="$BIN_PATH"
 FIRMWARE_URL="https://github.com/dabatnot/Azway-Retro-Controller/releases/latest/download/firmware.zip"
 GITHUB_API_URL="https://api.github.com/repos/dabatnot/Azway-Retro-Controller/releases/latest"
 
-## @brief Function to fetch the latest version number from GitHub API using wget et jq
+## @brief Function to fetch the latest version number from GitHub API using wget et Python
 # @return Latest version number or exits on error
 fetch_latest_version() {
     log "Fetching the latest firmware version from GitHub."
     wget --no-check-certificate -O "$TEMP_DIR/latest_release.json" "$GITHUB_API_URL" >> "$LOG_FILE" 2>&1
     if [ -f "$TEMP_DIR/latest_release.json" ]; then
-        VERSION=$(jq -r '.tag_name' "$TEMP_DIR/latest_release.json")
+        VERSION=$(python3 -c "import json; f = open('$TEMP_DIR/latest_release.json'); data = json.load(f); f.close(); print(data['tag_name'])")
         log "Latest version fetched: $VERSION"
         echo "$VERSION"
     else
@@ -121,10 +121,8 @@ else
     log "No installed version found."
 fi
 
-# Compare versions et download the latest release if necessary
-if version_greater_or_equal "$INSTALLED_VERSION" "$LATEST_VERSION"; then
-    log "The installed version is up to date or newer. No action required."
-else
+# Download and install the latest release if no version is installed or a newer version is available
+if [ "$INSTALLED_VERSION" = "none" ] || ! version_greater_or_equal "$INSTALLED_VERSION" "$LATEST_VERSION"; then
     log "A newer version is available. Downloading the latest release..."
     wget --no-check-certificate -O "$TEMP_DIR/firmware.zip" "$FIRMWARE_URL" >> "$LOG_FILE" 2>&1
     log "Extracting firmware.zip to $TEMP_DIR"
@@ -136,6 +134,8 @@ else
     log "Contents of $FIRMWARE_PATH after copying:"
     ls -l "$FIRMWARE_PATH" >> "$LOG_FILE" 2>&1
     log "Latest release downloaded et extracted."
+else
+    log "The installed version is up to date or newer. No action required."
 fi
 
 # Detect the ESP32
