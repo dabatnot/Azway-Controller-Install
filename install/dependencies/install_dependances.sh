@@ -23,9 +23,10 @@
 # SOFTWARE.
 
 # Define file and directory paths
-LIBS_ZIP="./libs/libs.zip"
-ESPTOOL_ZIP="./libs/esptool.zip"
+
 DEST_DIR="/recalbox/share/addons/azway/controller"
+LIBS_ZIP="$DEST_DIR/install/libs/libs.zip"
+ESPTOOL_ZIP="$DEST_DIR/install/libs/esptool.zip"
 LIBS_DIR="./libs"
 TEMP_DIR="/recalbox/share/addons/azway/controller/tmp/esptool_temp"
 ESPTOOL_DEST_DIR="/recalbox/share/addons/azway/controller/firmware/tools/esptool"
@@ -57,9 +58,8 @@ log "Script started."
 # Check if the libs.zip file exists
 if [ -f "$LIBS_ZIP" ]; then
     log "The libs.zip file exists. Decompressing..."
-    # Create the destination directory if it doesn't exist
-    rm -rf "$DEST_DIR/libs/"
-    mkdir -p "$DEST_DIR"
+    # Remove the contents of the destination directory except for libs.zip
+    find "$DEST_DIR/libs" -mindepth 1 ! -name 'libs.zip' -exec rm -rf {} +
     log "Destination directory created or already exists: $DEST_DIR"
     # Decompress the libs.zip file into the destination directory
     if unzip -o -u "$LIBS_ZIP" -d "$DEST_DIR"; then
@@ -110,7 +110,7 @@ else
 fi
 
 # Remove the libs directory
-rm -rf "$LIBS_DIR"
+#rm -rf "$LIBS_DIR"
 log "The libs directory has been removed."
 
 log "Script completed."
