@@ -1,5 +1,9 @@
 #!/bin/ash
 
+LOG_FILE="/recalbox/share/addons/azway/controller/logs/main.log"
+mkdir -p "$(dirname "$LOG_FILE")"
+exec > >(tee -a "$LOG_FILE") 2>&1
+
 # Function to get the latest release tag from a GitHub repository
 get_latest_release() {
     repo=$1
@@ -78,35 +82,54 @@ latest_release2=$(get_latest_release $repo2)
 echo "Latest release for $repo1: $latest_release1"
 echo "Latest release for $repo2: $latest_release2"
 
-# Download the latest release for repo1 to the specified directory
-file_name="controller.zip"
-destination_dir="/recalbox/share/addons/azway/controller/install"
-clean_directory $destination_dir  # Clean the destination directory before unzipping
-download_latest_release $repo1 $file_name $destination_dir
-
-# Unzip the downloaded file without creating subfolders
-unzip_file "$destination_dir/$file_name" $destination_dir
-
-# Clean up the zip file
-rm "$destination_dir/$file_name"
-
-# Run the install_dependances.sh script
-install_script="/recalbox/share/addons/azway/controller/install/dependencies/install_dependances.sh"
-run_script $install_script
-
-# Check the installed firmware version
-installed_version_file="/recalbox/share/addons/azway/controller/firmware/instelled_version.txt"
-if [ -f "$installed_version_file" ]; then
-    installed_version=$(cat "$installed_version_file")
+# Check the installed version for Azway-Retro-Controller-Install
+install_version_file="/recalbox/share/addons/azway/controller/installed_version.txt"
+if [ -f "$install_version_file" ]; then
+    installed_version1=$(cat "$install_version_file")
 else
-    installed_version="v0.0.0"
+    installed_version1="v0.0.0"
+fi
+
+# Download the latest release for repo1 only if the latest release is greater
+if version_greater "$latest_release1" "$installed_version1"; then
+    file_name="controller.zip"
+    destination_dir="/recalbox/share/addons/azway/controller/install"
+    clean_directory $destination_dir  # Clean the destination directory before unzipping
+    download_latest_release $repo1 $file_name $destination_dir
+
+    # Unzip the downloaded file without creating subfolders
+    unzip_file "$destination_dir/$file_name" $destination_dir
+
+    # Clean up the zip file
+    rm "$destination_dir/$file_name"
+
+    # Update the installed version file for Azway-Retro-Controller-Install
+    echo "$latest_release1" > "$install_version_file"
+
+    # Run the install_dependances.sh script
+    install_script="/recalbox/share/addons/azway/controller/install/dependencies/install_dependances.sh"
+    run_script $install_script
+
+    echo "Downloaded, unzipped, and ran install_dependances.sh for $repo1"
+else
+    echo "No update needed for $repo1"
+fi
+
+# Check the installed firmware version for Azway-Retro-Controller
+firmware_version_file="/recalbox/share/addons/azway/controller/firmware/installed_version.txt"
+if [ -f "$firmware_version_file" ]; then
+    installed_version2=$(cat "$firmware_version_file")
+else
+    installed_version2="v0.0.0"
 fi
 
 # Compare versions and run the flash script if the latest release is greater
-if version_greater "$latest_release2" "$installed_version"; then
+if version_greater "$latest_release2" "$installed_version2"; then
     flash_script="/recalbox/share/addons/azway/controller/install/flash/flash.sh"
     run_script $flash_script
-    echo "$latest_release2" > "$installed_version_file"
-fi
+    echo "$latest_release2" > "$firmware_version_file"
 
-echo "Downloaded, unzipped, ran install_dependances.sh, and ran flash.sh if needed for $repo1"
+    echo "Downloaded, unzipped, ran install_dependances.sh, and ran flash.sh if needed for $repo2"
+else
+    echo "No update needed for $repo2 firmware"
+fi
