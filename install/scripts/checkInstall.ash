@@ -202,10 +202,10 @@ else
 fi
 
 # Launch controller.py
-#echo "Running controller script"
-#nohup python3 "$CONTROLLER_SCRIPT" &
-#controller_pid=$!
-#disown $controller_pid
+echo "Running controller script"
+nohup python3 "$CONTROLLER_SCRIPT" &
+controller_pid=$!
+disown $controller_pid
 
 # Running post install task
 if [ "$update_done" = true ]; then
