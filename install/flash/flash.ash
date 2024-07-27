@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-## @file flashesp.sh
+## @file flashesp.ash
 # @brief Script for flashing ESP32 firmware.
 # @details This script checks for a newer firmware version, downloads it if available,
 # flashes it onto an ESP32 device, et then cleans up temporary files.

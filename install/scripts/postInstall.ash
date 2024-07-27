@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 # MIT License
 # 
@@ -41,7 +41,7 @@ CHECK_INSTALL_SYNC_SCRIPT_PATH="$USER_SCRIPTS_PATH/$CHECK_INSTALL_SYNC_SCRIPT"
 wait_for_script() {
     script_name=$1
     echo "Waiting for $script_name to finish..."
-    while ps aux | grep -v grep | grep "$script_name" > /dev/null; do
+    while ps | grep -v grep | grep "$script_name" > /dev/null; do
         sleep 1
     done
     echo "$script_name exited"

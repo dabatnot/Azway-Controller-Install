@@ -35,10 +35,10 @@ DESTINATION_DIR="$BASE_PATH/install"  # Destination directory for downloading an
 REPO1="dabatnot/Azway-Retro-Controller-Install"  # Repository 1 to check for updates
 REPO2="dabatnot/Azway-Retro-Controller"  # Repository 2 to check for updates
 FILE_NAME="controller.zip"  # Name of the file to download
-INSTALL_SCRIPT="$BASE_PATH/install/dependencies/install_dependances.sh"  # Path to the install dependencies script
-FLASH_SCRIPT="$BASE_PATH/install/flash/flash.sh"  # Path to the flash script
+INSTALL_SCRIPT="$BASE_PATH/install/dependencies/install_dependances.ash"  # Path to the install dependencies script
+FLASH_SCRIPT="$BASE_PATH/install/flash/flash.ash"  # Path to the flash script
 CONTROLLER_SCRIPT="$BASE_PATH/scripts/controller.py"  # Path to the controller script
-POST_INSTALL_SCRIPT="$BASE_PATH/scripts/postInstall.sh"  # Path to the post install script
+POST_INSTALL_SCRIPT="$BASE_PATH/scripts/postInstall.ash"  # Path to the post install script
 SCRIPTS_DIR="$BASE_PATH/scripts"  # Directory for scripts
 INSTALL_SCRIPTS_DIR="$BASE_PATH/install/scripts"  # Directory for installation scripts
 
@@ -169,17 +169,17 @@ if version_greater "$latest_release1" "$installed_version1"; then
     # Update the installed version file for Azway-Retro-Controller-Install
     echo "$latest_release1" > "$INSTALL_VERSION_FILE"
 
-    # Run the install_dependances.sh script
+    # Run the install_dependances.ash script
     run_script "$INSTALL_SCRIPT"
 
     rm -rf "$SCRIPTS_DIR"
     mkdir "$SCRIPTS_DIR"
-    cp "$INSTALL_SCRIPTS_DIR/postInstall.sh" "$SCRIPTS_DIR/postInstall.sh"
+    cp "$INSTALL_SCRIPTS_DIR/postInstall.ash" "$SCRIPTS_DIR/postInstall.ash"
     cp "$INSTALL_SCRIPTS_DIR/controller.py" "$SCRIPTS_DIR/controller.py"
     cp "$INSTALL_SCRIPTS_DIR/checkInstall.ash" "$SCRIPTS_DIR/checkInstall.ash"
 
     update_done=true
-    echo "Downloaded, unzipped, and ran install_dependances.sh for $REPO1"
+    echo "Downloaded, unzipped, and ran install_dependances.ash for $REPO1"
 else
     echo "No update needed for $REPO1"
 fi
@@ -196,7 +196,7 @@ if version_greater "$latest_release2" "$installed_version2"; then
     run_script "$FLASH_SCRIPT"
     echo "$latest_release2" > "$FIRMWARE_VERSION_FILE"
     update_done=true
-    echo "Downloaded, unzipped, ran install_dependances.sh, and ran flash.sh if needed for $REPO2"
+    echo "Downloaded, unzipped, ran install_dependances.ash, and ran flash.ash if needed for $REPO2"
 else
     echo "No update needed for $REPO2 firmware"
 fi
