@@ -7,7 +7,7 @@ while pgrep -x "checkInstall.sh" > /dev/null; do
 done
 
 #Remove Install dir
-rm -rf /recalbox/share/addons/azway/controller/install
+#rm -rf /recalbox/share/addons/azway/controller/install
 echo "Removed install dir"
 
 #Update existing checkInstall.sh script
