@@ -1,8 +1,15 @@
 #!/bin/bash
 
 # Attendre que checkInstall.sh se termine
+echo "Attente de la fin de checkInstall[start](sync).ash..."
+
 echo "Attente de la fin de checkInstall.ash..."
-while pgrep -x "checkInstall.ash" > /dev/null; do
+while ps aux | grep -v grep | grep "checkInstall.ash" > /dev/null; do
+  sleep 1
+done
+
+echo "Attente de la fin de checkInstall[start](sync).ash..."
+while ps aux | grep -v grep | grep "checkInstall\[start\](sync).ash" > /dev/null; do
   sleep 1
 done
 
