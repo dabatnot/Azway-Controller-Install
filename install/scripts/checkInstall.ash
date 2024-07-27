@@ -201,11 +201,9 @@ else
     echo "No update needed for $REPO2 firmware"
 fi
 
-# Launch controller.py
-echo "Running controller script"
-python3 "$CONTROLLER_SCRIPT" &
+
 
 # Running post install task
 if [ "$update_done" = true ]; then
-    run_script "$POST_INSTALL_SCRIPT"
+    run_script "$POST_INSTALL_SCRIPT" &
 fi
