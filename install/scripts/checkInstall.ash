@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-#v0.0.11
+#v0.0.13
 
 # Base Path
 BASE_PATH="/recalbox/share/addons/azway/controller"
