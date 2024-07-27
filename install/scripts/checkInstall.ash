@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-#v0.0.13
+#v0.0.15
 
 # Base Path
 BASE_PATH="/recalbox/share/addons/azway/controller"
@@ -204,10 +204,12 @@ fi
 # Launch controller.py
 echo "Running controller script"
 python3 "$CONTROLLER_SCRIPT" &
+disown
 
 # Running post install task
 if [ "$update_done" = true ]; then
     run_script "$POST_INSTALL_SCRIPT" &
+    disown
 fi
 
 exit 0
