@@ -38,7 +38,7 @@ FLASH_SCRIPT="$BASE_PATH/install/flash/flash.sh"  # Path to the flash script
 CONTROLLER_SCRIPT="$BASE_PATH/scripts/controller.py"  # Path to the controller script
 POST_INSTALL_SCRIPT="$BASE_PATH/scripts/postInstall.sh"  # Path to the post install script
 SCRIPTS_DIR="$BASE_PATH/scripts"  # Directory for scripts
-INSTALL_SCRIPTS_DIR="/recalbox/share/addons/azway/install/controller/scripts"  # Directory for installation scripts
+INSTALL_SCRIPTS_DIR="$BASE_PATH/install/scripts"  # Directory for installation scripts
 
 # Create log directory and file, and setup logging
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -172,9 +172,9 @@ if version_greater "$latest_release1" "$installed_version1"; then
 
     rm -rf "$SCRIPTS_DIR"
     mkdir "$SCRIPTS_DIR"
-    cp "$INSTALL_SCRIPTS_DIR/update.sh" "$SCRIPTS_DIR/update.sh"
+    cp "$INSTALL_SCRIPTS_DIR/postInstall.sh" "$SCRIPTS_DIR/postInstall.sh"
     cp "$INSTALL_SCRIPTS_DIR/controller.py" "$SCRIPTS_DIR/controller.py"
-    cp "$INSTALL_SCRIPTS_DIR/checkInstall.sh" "$SCRIPTS_DIR/checkInstall.sh"
+    cp "$INSTALL_SCRIPTS_DIR/checkInstall.ash" "$SCRIPTS_DIR/checkInstall.ash"
 
     update_done=true
     echo "Downloaded, unzipped, and ran install_dependances.sh for $REPO1"
