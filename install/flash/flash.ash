@@ -75,13 +75,11 @@ fetch_latest_version() {
     fi
 }
 
-## @brief Function to compare versions
-# @param $1 Version to compare
-# @param $2 Version to compare against
-# @return 0 if the first version is greater or equal to the second, 1 otherwise
-version_greater_or_equal() {
-    log "Comparing versions: $1 et $2"
-    [ "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
+## @brief Function to compare version strings
+# @param $@ The versions to be compared
+# @return True if the first version is greater than the second, False otherwise
+version_greater() {
+    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"
 }
 
 ## @brief Function to detect the ESP32
@@ -122,7 +120,7 @@ else
 fi
 
 # Download and install the latest release if no version is installed or a newer version is available
-if [ "$INSTALLED_VERSION" = "none" ] || ! version_greater_or_equal "$INSTALLED_VERSION" "$LATEST_VERSION"; then
+if [ "$INSTALLED_VERSION" = "none" ] || version_greater "$LATEST_VERSION" "$INSTALLED_VERSION"; then
     log "A newer version is available. Downloading the latest release..."
     wget --no-check-certificate -O "$TEMP_DIR/firmware.zip" "$FIRMWARE_URL" >> "$LOG_FILE" 2>&1
     log "Extracting firmware.zip to $TEMP_DIR"
