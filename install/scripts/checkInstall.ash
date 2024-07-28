@@ -36,7 +36,7 @@ REPO1="dabatnot/Azway-Retro-Controller-Install"  # Repository 1 to check for upd
 REPO2="dabatnot/Azway-Retro-Controller"  # Repository 2 to check for updates
 FILE_NAME="controller.zip"  # Name of the file to download
 INSTALL_SCRIPT="$BASE_PATH/install/dependencies/install_dependances.ash"  # Path to the install dependencies script
-FLASH_SCRIPT="$BASE_PATH/install/flash/flash.ash"  # Path to the flash script
+FLASH_SCRIPT="$BASE_PATH/firmware/tools/flash.ash"  # Updated path to the flash script
 CONTROLLER_SCRIPT="$BASE_PATH/scripts/controller.py"  # Path to the controller script
 POST_INSTALL_SCRIPT="$BASE_PATH/scripts/postInstall.ash"  # Path to the post install script
 SCRIPTS_DIR="$BASE_PATH/scripts"  # Directory for scripts
@@ -165,6 +165,15 @@ if version_greater "$latest_release1" "$installed_version1"; then
 
     # Clean up the zip file
     rm "$DESTINATION_DIR/$FILE_NAME"
+
+    # Move the flash.ash file to the desired location
+    FLASH_SRC="$DESTINATION_DIR/flash/flash.ash"
+    FLASH_DEST="$BASE_PATH/firmware/tools/flash.ash"
+    mkdir -p "$(dirname "$FLASH_DEST")"  # Create the destination directory if it doesn't exist
+    if [ -f "$FLASH_DEST" ]; then
+        rm "$FLASH_DEST"  # Remove any existing version of flash.ash in the destination
+    fi
+    mv "$FLASH_SRC" "$FLASH_DEST"  # Move the flash.ash file to the destination
 
     # Update the installed version file for Azway-Retro-Controller-Install
     echo "$latest_release1" > "$INSTALL_VERSION_FILE"
