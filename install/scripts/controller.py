@@ -24,6 +24,10 @@
 # @brief Script for controlling ESP32 via MQTT.
 # @details This script detects an ESP32 device, communicates with it via serial, and processes MQTT messages to send commands to the ESP32.
 
+import sys
+sys.path.insert(0, '/recalbox/share/addons/azway/controller/libs/lib') #Change lib path
+
+
 import serial
 import serial.tools.list_ports
 import time
